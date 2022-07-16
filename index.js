@@ -14,6 +14,7 @@ let inputCantidad;
 let tabla;
 
 class Productos {
+
   constructor(plataforma, ubicacion, posicion, bannertype, subtype, marca, categoria, temporada, fecha, cantidad) {
     this.plataforma = plataforma.toUpperCase();
     this.ubicacion = ubicacion;
@@ -25,7 +26,53 @@ class Productos {
     this.temporada = temporada;
     this.fecha = fecha;
     this.cantidad = cantidad;
+    this.puntaje;
   }
+
+  devolverUbicacion() {
+    switch (this.ubicacion) {
+      case "1":
+        return "Home";
+        break;
+      case "2":
+        return "Categoría";
+        break
+      default:
+        return "Error";
+        break;
+    }
+  }
+
+  devolverPosicion() {
+    switch (this.ubicacion) {
+      case "10":
+        return "Header";
+        break;
+      case "4":
+        return "Middle";
+        break
+      case "2":
+        return "Footer";
+        break
+      case "7":
+        return "Header";
+        break;
+      case "3":
+        return "Middle";
+        break
+      case "1":
+        return "Footer";
+        break
+      default:
+        return "Error";
+        break;
+    }
+  }
+
+  calcularPuntaje() {
+    return this.posicion / this.cantidad;
+  }
+
 }
 
 function inicializarElementos() {
@@ -44,21 +91,78 @@ function inicializarElementos() {
 }
 
 function inicializarEventos() {
+
+
+  inputUbicacion.addEventListener("change", () => {
+    
+    if(parseInt(inputUbicacion.value) !== 0) {
+      inputPosicion.disabled = false;
+      addOptionsByUbicacion(parseInt(inputUbicacion.value));
+
+    } else {
+      inputPosicion.disabled = true;
+    }
+
+  });
+
   formulario.onsubmit = (event) => validarFormulario(event);
+
+}
+
+function addOptionsByUbicacion(ubicacionValue) {
+
+  if(ubicacionValue === 1) {
+    inputPosicion.innerHTML = '';
+    inputPosicion.innerHTML += `<option value="10"> Header </option>`
+    inputPosicion.innerHTML += `<option value="4"> Middle </option>`
+    inputPosicion.innerHTML += `<option value="2"> Footer </option>`
+  }
+
+  if(ubicacionValue === 2) {
+    inputPosicion.innerHTML = '';
+    inputPosicion.innerHTML += `<option value="7"> Header </option>`
+    inputPosicion.innerHTML += `<option value="3"> Middle </option>`
+    inputPosicion.innerHTML += `<option value="1"> Footer </option>`
+  }
+
 }
 
 function validarFormulario(event) {
   event.preventDefault();
   let plataforma = inputPlataforma.value;
+
+  if(plataforma == "") {
+    inputPlataforma.value = "Error no dejar en blanco";
+    return false;
+  }
+
   let ubicacion = inputUbicacion.value;
   let posicion = inputPosicion.value;
   let bannertype = inputBannerType.value;
   let subtype = inputSubtype.value;
   let marca = inputMarca.value;
+
+  if(marca == "") {
+    inputMarca.value = "Error no dejar en blanco";
+    return false;
+  }
+
   let categoria = inputCategoria.value;
+
+  if(categoria == "") {
+    inputCategoria.value = "Error no dejar en blanco";
+    return false;
+  }
+
   let temporada = inputTemporada.value;
   let fecha = inputFecha.value;
   let cantidad = inputCantidad.value;
+
+  if(cantidad == 0) {
+    inputCantidad.value = "No dejar en blanco";
+    return false;
+  }
+
   let producto = new Productos(plataforma, ubicacion, posicion, bannertype, subtype, marca, categoria, temporada, fecha, cantidad);
   productos.push(producto);
   formulario.reset();
@@ -69,19 +173,21 @@ function validarFormulario(event) {
 }
 
 function agregarProductosTabla() {
+  console.log(productos);
   productos.forEach((producto) => {
     let filaTabla = document.createElement("tr");
     filaTabla.innerHTML = `
       <td>${producto.plataforma}</td>
-      <td>${producto.ubicacion}</td>
-      <td>${producto.posicion}</td>
+      <td>${producto.devolverUbicacion()}</td>
+      <td>${producto.devolverPosicion()}</td>
       <td>${producto.bannertype}</td>
       <td>${producto.subtype}</td>
       <td>${producto.marca}</td>
       <td>${producto.categoria}</td>
       <td>${producto.temporada}</td>
       <td>${producto.fecha}</td>
-      <td>${producto.cantidad}</td>`;
+      <td>${producto.cantidad}</td>
+      <td>${producto.calcularPuntaje()}</td>`;
     tabla.tBodies[0].append(filaTabla);
   });
 }
@@ -98,9 +204,14 @@ function almacenarProductosLocalStorage() {
 
 function obtenerProductosLocalStorage() {
   let productosAlmacenados = localStorage.getItem("listaProductos");
-  console.log(typeof productosAlmacenados)
   if (productosAlmacenados !== null) {
-    productos = JSON.parse(productosAlmacenados);
+    arrayRecuperado = JSON.parse(productosAlmacenados);
+    console.log(arrayRecuperado)
+    arrayProductos = arrayRecuperado.map( elemento => {
+      let producto = new Productos(elemento.plataforma, elemento.ubicacion, elemento.posicion, elemento.bannertype, elemento.subtype, elemento.marca, elemento.categoria, elemento.temporada, elemento.fecha, elemento.cantidad);
+      return producto;
+    })    
+    productos = arrayProductos;
   }
 }
 
@@ -110,5 +221,6 @@ function main() {
   obtenerProductosLocalStorage();
   agregarProductosTabla();
 }
+
 
 main();

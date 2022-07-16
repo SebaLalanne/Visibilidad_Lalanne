@@ -38,33 +38,31 @@
 
             <div class="mb-3">
               <p>Ubicación</p>
-              <select class= "form-label" id="inputUbicacion" type="text">
-
-                    <option></option>
-                    <option>Home</option>
-                    <option>Categoría</option>
-
+              <select class="form-control" id="inputUbicacion">
+                    <option value="0">Ingresar ubicación</option>
+                    <option value="1">Home</option>
+                    <option value="2">Categoría</option>
               </select>
               
             </div>
 
             <div class="mb-3">
               <p>Posición</p>
-              <select class="form-label" type="text" id="inputPosicion" >
+              <select class="form-control" type="text" id="inputPosicion" disabled>
 
-                    <option></option>
+                    <!-- <option></option>
                     <option>Header</option>
                     <option>Middle</option>
-                    <option>Footer</option>
+                    <option>Footer</option> -->
 
               </select>
             </div>
 
             <div class="mb-3">
               <p>Banner type</p>
-              <select class="form-label" type="text" id="inputBannerType">
+              <select class="form-control" type="text" id="inputBannerType">
 
-                    <option></option>
+                    <option>Ingrese tipo de banner</option>
                     <option>Equity</option>
                     <option>promotion</option>
 
@@ -73,9 +71,9 @@
 
             <div class="mb-3">
               <p>Subtype</p>
-                <select class="form-label" type="text" id="inputSubtype">
+                <select class="form-control" type="text" id="inputSubtype">
 
-                    <option></option>
+                    <option>Ingrese contenido de banner</option>
                     <option>Freeshiping</option>
                     <option>Discount</option>
                     <option>Free product</option>
@@ -105,7 +103,7 @@
 
               <div class="mb-3">
                 <label class="form-label">Cantidad de marcas en la imagen</label>
-                <input type="number" class="form-control" id="inputCantidad" />
+                <input /**type="number"*// class="form-control" id="inputCantidad" />
               </div>
 
             <div class="d-grid gap-2">
@@ -129,6 +127,7 @@
                   <td>Temporada</td>
                   <td>Fecha</td>
                   <td>Cantidad de marcas</td>
+                  <td>Puntaje Total</td>
               </tr>
               </th>
               <tbody></tbody>
