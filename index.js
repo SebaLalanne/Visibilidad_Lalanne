@@ -91,8 +91,6 @@ function inicializarElementos() {
 }
 
 function inicializarEventos() {
-
-
   inputUbicacion.addEventListener("change", () => {
     
     if(parseInt(inputUbicacion.value) !== 0) {
@@ -106,6 +104,7 @@ function inicializarEventos() {
   });
 
   formulario.onsubmit = (event) => validarFormulario(event);
+  
 
 }
 
@@ -166,10 +165,27 @@ function validarFormulario(event) {
   let producto = new Productos(plataforma, ubicacion, posicion, bannertype, subtype, marca, categoria, temporada, fecha, cantidad);
   productos.push(producto);
   formulario.reset();
+  
+  //Acá va el boton!!!!
+  Swal.fire({
+    title: 'Do you want to save the changes?',
+    showDenyButton: true,
+    confirmButtonText: 'Save',
+    denyButtonText: `Don't save`,
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      Swal.fire('Saved!', '', 'success')
+      limpiarTabla();
+      agregarProductosTabla();
+      almacenarProductosLocalStorage();
+    } else if (result.isDenied) {
+      Swal.fire('Changes are not saved', '', 'info')
+    }
+  })
+  
 
-  limpiarTabla();
-  agregarProductosTabla();
-  almacenarProductosLocalStorage();
+  
 }
 
 function agregarProductosTabla() {
