@@ -44,7 +44,7 @@ class Productos {
   }
 
   devolverPosicion() {
-    switch (this.ubicacion) {
+    switch (this.posicion) {
       case "10":
         return "Header";
         break;
@@ -173,7 +173,6 @@ function validarFormulario(event) {
     confirmButtonText: 'Save',
     denyButtonText: `Don't save`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       Swal.fire('Saved!', '', 'success')
       limpiarTabla();
@@ -214,8 +213,18 @@ function limpiarTabla() {
   }
 }
 
-function almacenarProductosLocalStorage() {
-  localStorage.setItem("listaProductos", JSON.stringify(productos));
+function almacenarProductosLocalStorage(visibilidad) {
+  fetch ("https://62e5770220afdf238d7cd742.mockapi.io/ingresos",{
+    method: "POST",
+    body: JSON.stringify(visibilidad),
+    headers: {
+      "content-type": "application/json",
+    },
+
+  })
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+  //localStorage.setItem("listaProductos", JSON.stringify(productos));
 }
 
 function obtenerProductosLocalStorage() {
@@ -237,6 +246,5 @@ function main() {
   obtenerProductosLocalStorage();
   agregarProductosTabla();
 }
-
 
 main();
