@@ -166,7 +166,6 @@ function validarFormulario(event) {
   productos.push(producto);
   formulario.reset();
   
-  //Acá va el boton!!!!
   Swal.fire({
     title: 'Do you want to save the changes?',
     showDenyButton: true,
@@ -177,13 +176,11 @@ function validarFormulario(event) {
       Swal.fire('Saved!', '', 'success')
       limpiarTabla();
       agregarProductosTabla();
-      almacenarProductosLocalStorage();
+      almacenarProductosLocalStorage(producto);
     } else if (result.isDenied) {
       Swal.fire('Changes are not saved', '', 'info')
     }
   })
-  
-
   
 }
 
@@ -213,37 +210,35 @@ function limpiarTabla() {
   }
 }
 
-function almacenarProductosLocalStorage(visibilidad) {
-  fetch ("https://62e5770220afdf238d7cd742.mockapi.io/ingresos",{
+async function almacenarProductosLocalStorage(visibilidad) {
+  await fetch("https://62e5770220afdf238d7cd742.mockapi.io/ingresos",{
     method: "POST",
     body: JSON.stringify(visibilidad),
     headers: {
       "content-type": "application/json",
     },
-
   })
   .then((response) => response.json())
   .then((data) => console.log(data));
-  //localStorage.setItem("listaProductos", JSON.stringify(productos));
 }
 
-function obtenerProductosLocalStorage() {
-  let productosAlmacenados = localStorage.getItem("listaProductos");
-  if (productosAlmacenados !== null) {
-    arrayRecuperado = JSON.parse(productosAlmacenados);
-    console.log(arrayRecuperado)
-    arrayProductos = arrayRecuperado.map( elemento => {
-      let producto = new Productos(elemento.plataforma, elemento.ubicacion, elemento.posicion, elemento.bannertype, elemento.subtype, elemento.marca, elemento.categoria, elemento.temporada, elemento.fecha, elemento.cantidad);
-      return producto;
-    })    
-    productos = arrayProductos;
-  }
+async function obtenerProductosLocalStorage() {
+  
+  let dataPaso1 = await fetch("https://62e5770220afdf238d7cd742.mockapi.io/ingresos", { method: "GET" });
+  let data = await (dataPaso1).json();
+
+  let arrayProductos = data.map( elemento => {
+    let producto = new Productos(elemento.plataforma, elemento.ubicacion, elemento.posicion, elemento.bannertype, elemento.subtype, elemento.marca, elemento.categoria, elemento.temporada, elemento.fecha, elemento.cantidad);
+    return producto;
+  })
+  console.log(arrayProductos);
+  productos = arrayProductos;
 }
 
-function main() {
+async function main() {
   inicializarElementos();
   inicializarEventos();
-  obtenerProductosLocalStorage();
+  await obtenerProductosLocalStorage();
   agregarProductosTabla();
 }
 
